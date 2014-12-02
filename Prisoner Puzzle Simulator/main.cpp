@@ -2,16 +2,16 @@
  9/30/14
  
  My naive solution to the "One Hundred Prisoners and A Light Bulb" puzzle (https://www.math.washington.edu/~morrow/336_11/papers/yisong.pdf)
- This solution could also easily be modified to work for the variation where all prisoners 
- must know all other prisoners have been interrogated. Unfortunately average time until 
+ This solution could also easily be modified to work for the variation where all prisoners
+ must know all other prisoners have been interrogated. Unfortunately average time until
  solution appears to be ~240 years.
  
  General principle is that the prisoners each assign themselves a unique number 1-100, and track
- interrogation days in blocks of 100. If their number happens to match up with the day 
+ interrogation days in blocks of 100. If their number happens to match up with the day
  they are called in to be interrogated, then they flip the light switch on. Additionally,
  each prisoner also takes note of which other days they have seen the light switch turned on
- and also turn on the light switch on days they know other prisoners have been interrogated. 
- Thus toward the later days of the puzzle, each prisoner has a long list of prisoners he 
+ and also turn on the light switch on days they know other prisoners have been interrogated.
+ Thus toward the later days of the puzzle, each prisoner has a long list of prisoners he
  knows has been interrogated, and uses this list to flip the light on for each of those previously
  seen days.
  
@@ -20,11 +20,11 @@
  matches the current day, he turns the light switch on.
  
  ex. 2
- Prisoner 65 gets called in on day 62, and sees the light switch on. Prisoner 65 now knows 
+ Prisoner 65 gets called in on day 62, and sees the light switch on. Prisoner 65 now knows
  prisoner 61 was interrogated, but turns the light switch off before leaving,
  because he does not know if prisoner 62 has been interrogated.
  
- ex 3. 
+ ex 3.
  Prisoner 21 gets called in on day 78, and the light switch is off. Prisoner 21 has previously
  come in on day 79 and seen the light switch on, so he knows prisoner 78 has been interrogated,
  so prisoner 21 turns the light switch on before leaving the room.
@@ -34,9 +34,8 @@
 
 #include <iostream>
 #include <vector>
-#include <time.h> // Time for rand() seed
-#include <stdlib.h> // Use of rand()
-#include <stdio.h> // Use of NULL
+#include <chrono>
+#include <random>
 
 using namespace std;
 
@@ -50,7 +49,7 @@ public:
     bool hasSeenLight(int dayNum);
     bool hasSolved();
     
-    // Mutator
+    // Mutators
     void addKnownDay(int dayNum);
     void checkIfSolved();
     
@@ -60,6 +59,12 @@ private:
 };
 
 int main(){
+    
+    // Initalize random generator
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    default_random_engine generator(seed);
+    uniform_int_distribution<int> prisonerSelector(0,99); // generate number between 0 and 99
+    
     // Initial state is the light is off
     bool light = 0;
     int day = 0;
@@ -73,29 +78,33 @@ int main(){
         prisonerVec.push_back(prisoner(i));
     }
     
-
-    // an int to keep track of the currently interrogated prisoner
+    // Int of currently interrogated prisoner
     int currentPrisoner = 0;
     
     // While loop ends when an interrogated prisoner solves puzzle
     while(prisonerVec[currentPrisoner].hasSolved() == 0){
         day++;
-        //cout << "day = " << day << endl;
-        currentPrisoner = rand() % 100; // select a prisoner number between 1-100
-        //cout << "current prisoner: " << currentPrisoner << endl;
-        //cout << "light " << light << endl;
+        
+        // select a prisoner number between 0-99
+        currentPrisoner = prisonerSelector(generator);
+        
+        // If they see the light on, they add the previous day as a known interrogation date
         if(light == 1){
             prisonerVec[currentPrisoner].addKnownDay((day-1) % 100);
-            //cout << "prisoner adds day " << (day-1)%100 << endl;
         }
+        
+        // If they are in the room on a date they know that the corresponding prisoner has
+        // been interrogated, they flip the light on to signal the next prisoner
         if(prisonerVec[currentPrisoner].hasSeenLight(day%100)){
             light = 1;
-            //cout << "prisoner " << currentPrisoner << " turns on the light" << endl;
         }
+        
+        // Otherwise they turn the light off
         else{
-        light = 0;
-        //cout << "prisoner " << currentPrisoner << " turns off the light" << endl;
+            light = 0;
         }
+        
+        // Check if the prisoner has solved the puzzle (seen all days), if so update status
         prisonerVec[currentPrisoner].checkIfSolved();
     }
     
@@ -103,9 +112,8 @@ int main(){
     << day/365.242 << " years" << endl;
     
 }
-
+//empty constructor
 prisoner::prisoner(){
-    //empty constructor
 }
 
 // Use the int argument to set the initial chosen light for that prisoner
