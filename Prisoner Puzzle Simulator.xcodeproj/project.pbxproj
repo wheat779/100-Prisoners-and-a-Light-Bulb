@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		84A031B119D32CCB00EC6EDE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A031B019D32CCB00EC6EDE /* main.cpp */; };
+		84A41ABE1A30DD3B00B17FDA /* naive_strategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A41ABD1A30DD3B00B17FDA /* naive_strategy.cpp */; };
+		84A41AC01A30DF5200B17FDA /* oneCounter_strategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A41ABF1A30DF5200B17FDA /* oneCounter_strategy.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,9 @@
 /* Begin PBXFileReference section */
 		84A031AD19D32CCB00EC6EDE /* Prisoner Puzzle Simulator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Prisoner Puzzle Simulator"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84A031B019D32CCB00EC6EDE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		84A41ABC1A30DC7600B17FDA /* Solutions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Solutions.h; sourceTree = "<group>"; };
+		84A41ABD1A30DD3B00B17FDA /* naive_strategy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = naive_strategy.cpp; sourceTree = "<group>"; };
+		84A41ABF1A30DF5200B17FDA /* oneCounter_strategy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oneCounter_strategy.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +63,9 @@
 			isa = PBXGroup;
 			children = (
 				84A031B019D32CCB00EC6EDE /* main.cpp */,
+				84A41ABC1A30DC7600B17FDA /* Solutions.h */,
+				84A41ABD1A30DD3B00B17FDA /* naive_strategy.cpp */,
+				84A41ABF1A30DF5200B17FDA /* oneCounter_strategy.cpp */,
 			);
 			path = "Prisoner Puzzle Simulator";
 			sourceTree = "<group>";
@@ -118,7 +126,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84A41ABE1A30DD3B00B17FDA /* naive_strategy.cpp in Sources */,
 				84A031B119D32CCB00EC6EDE /* main.cpp in Sources */,
+				84A41AC01A30DF5200B17FDA /* oneCounter_strategy.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +242,7 @@
 				84A031B619D32CCB00EC6EDE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
