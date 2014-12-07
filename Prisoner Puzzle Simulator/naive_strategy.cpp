@@ -39,11 +39,11 @@
 
 using namespace std;
 
-class prisoner{
+class prisoner2{
 public:
     // Constructors
-    prisoner(); // empty constructor
-    prisoner(int prisonerNum); // The prisoner's corresponding day/number
+    prisoner2(); // empty constructor
+    prisoner2(int prisonerNum); // The prisoner's corresponding day/number
     
     // Accessors
     bool hasSeenLight(int dayNum);
@@ -73,9 +73,9 @@ void naive_strategy(){
     srand(time(NULL));
     
     // Create a vector of 100 prisoners and set so each has an assigned number
-    vector<prisoner> prisonerVec;
+    vector<prisoner2> prisonerVec;
     for(int i = 0; i < 100; i++){
-        prisonerVec.push_back(prisoner(i));
+        prisonerVec.push_back(prisoner2(i));
     }
     
     // Int of currently interrogated prisoner
@@ -113,11 +113,11 @@ void naive_strategy(){
     
 }
 //empty constructor
-prisoner::prisoner(){
+prisoner2::prisoner2(){
 }
 
 // Use the int argument to set the initial chosen light for that prisoner
-prisoner::prisoner(int prisonNum){
+prisoner2::prisoner2(int prisonNum){
     vector<bool> lights;
     for(int i = 0; i < 100; i++){
         lights.push_back(0);
@@ -128,16 +128,16 @@ prisoner::prisoner(int prisonNum){
 }
 
 // Return true if the prisoner has previously seen the light on for argument day, else false
-bool prisoner::hasSeenLight(int dayNum){
+bool prisoner2::hasSeenLight(int dayNum){
     return lightsSeen[dayNum];
 }
 
-void prisoner::addKnownDay(int dayNum){
+void prisoner2::addKnownDay(int dayNum){
     lightsSeen[dayNum] = 1;
 }
 
 // Check if prisoner has seen all 100 days, if they have set private var to solved = 1
-void prisoner::checkIfSolved(){
+void prisoner2::checkIfSolved(){
     for(int i = 0; i < lightsSeen.size(); i++){
         if(lightsSeen[i]){
             if(i == 99){
@@ -151,6 +151,6 @@ void prisoner::checkIfSolved(){
 }
 
 // Return whether or not the prisoner has solved the puzzle
-bool prisoner::hasSolved(){
+bool prisoner2::hasSolved(){
     return solved;
 }

@@ -15,53 +15,139 @@
 #include <random>
 #include <chrono>
 
-using namespace std;
+class prisoner{
+public:
+    //Constructors
+    prisoner();
+    
+    //Accessors
+    bool hasFlipped();
+    
+    //Mutator
+    void setFlippedTrue();
+    
+private:
+    bool flipped = 0;
+    bool isCounter = 0;
+};
+
+class counter{
+public:
+    //constructor
+    counter();
+    
+    //Mutator
+    void increaseCount();
+    void checkIfSolved();
+    
+    //Accessor
+    int getCount();
+    bool solvedPuzzle();
+    
+private:
+    int count = 0;
+    bool solved = 0;
+    bool isCounter = 1;
+    
+};
+
+std::vector<prisoner> makePrisonerVector();
 
 void oneCounter_strategy(){
     
-    // Bool tracking whether the light is on or off. Initial state is off.
-    bool light = 0;
-    /* Vector containing whether or not the correspondingly
-     numbered prisoner had previously flipped the light switch
-     if 1, then that prisoner has visited the interrogation
-     room and flipped the light switch
+    // Initalize random generator to select prisoner for interrogation
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+    std::uniform_int_distribution<int> prisonerSelector(0,99); // generate number between 0 and 99
+    
+    bool light = 0; // Bool tracking whether the light is on or off.
+    int day = 0; // Int tracking how many days have elasped since interrogations have started
+    int currentPrisoner = 0; // Int to track the currently interrogated prisoner
+    
+    // Create ector containing 99 prisoners (excluding the counter)
+    std::vector<prisoner> prisoners = makePrisonerVector();
+    
+    // Create a prisoner who will be the counter
+    counter counterPrisoner;
+    
+    /*
+     Main loop starts a new day by selecting a random prisoner. 
+     If that prisoner is the counter (prisoner 0) they check if the light bulb is on, if it is
+     they increase their count and flip the light back off. When they've flipped it off 99 times,
+     they know all prisoners have visited.
+     
+     If the random prisoner isn't the counter , they merely enter and flip the 
+     light on if they have never done so before, and the light is currently off.
      */
-    vector<bool> prisoners;
-    // Int tracking how many days have elasped since interrogations have started
-    int day = 0;
-    // The counter's current number of time's flipping the light switch off. At 99
-    // He knows all prisoners have been interogated.
-    int prisonerCount = 0;
-    
-    // Initalize random generator
-    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-    default_random_engine generator(seed);
-    uniform_int_distribution<int> prisonerSelector(0,99); // generate number between 0 and 99
-    
-    // Add prisoners to our vector. 0 indicates they haven't flipped the light switch yet
-    for(int i = 0; i < 99; i++){
-        prisoners.push_back(0);
-    }
-    // Number of current prisoner being interrogated
-    int currentPrisoner = 0;
-    
-    while(prisonerCount < 99){
+    while(counterPrisoner.solvedPuzzle() == false){
         day++;
         currentPrisoner = prisonerSelector(generator);
-        // If the light is off, and the current prisoner hasn't turned it on before,
-        // they flip it on, and remember they have done so
-        if(light == 0 && prisoners[currentPrisoner] == 0){
-            prisoners[currentPrisoner] = 1;
+
+        if(currentPrisoner == 0 && light == 1){
+            counterPrisoner.increaseCount();
+            light = 0;
+            counterPrisoner.checkIfSolved();
+        }
+        
+        else if(light == 0 && prisoners[currentPrisoner].hasFlipped() == 0){
+            prisoners[currentPrisoner].setFlippedTrue();
             light = 1;
         }
-        // If prisoner 0, our counter, is interrogated and the light is on
-        // he increments his count and then switches the light off
-        if(currentPrisoner == 0 && light == 1){
-            prisonerCount++;
-            light = 0;
-        }
+    }
+    //Output days it took puzzle to be solved puzzle is solved
+    std::cout << "The counter solved the puzzle after " << day << " days, or "
+    << day/365.242 << " years" << std::endl;
+}
+
+// Empty constructor
+prisoner::prisoner(){}
+
+// Accessor for whether a prisoner has flipped the lightswitch
+bool prisoner::hasFlipped(){
+    return flipped;
+}
+
+void prisoner::setFlippedTrue(){
+    flipped = true;
+}
+
+//Empty constructor
+counter::counter(){};
+
+//Increase the current count of times the lightswitch has been flipped off
+void counter::increaseCount(){
+    count++;
+}
+
+int counter::getCount(){
+    return count;
+}
+
+bool counter::solvedPuzzle(){
+    return solved;
+}
+
+void counter::checkIfSolved(){
+    if(count == 99){
+        solved = 1;
+    }
+}
+
+// Create a vector of 100 prisoners, but assign prisoner 0 (the counter) as having flipped
+// the switch already
+std::vector<prisoner> makePrisonerVector(){
+    
+    int numberOfPrisoners = 100;
+    std::vector<prisoner> prisonerVec;
+    
+    for(int i = 0; i < numberOfPrisoners; i++){
+        prisonerVec.push_back(prisoner());
     }
     
-    cout << "The counter solved the puzzle after " << day << " days, or "
-    << day/365.242 << " years" << endl;
+    prisonerVec[0].setFlippedTrue();
+    
+    if(prisonerVec.size() != 100){
+        std::cout << "prisonerVec incorrect size: " << prisonerVec.size();
+    }
+    return prisonerVec;
 }
